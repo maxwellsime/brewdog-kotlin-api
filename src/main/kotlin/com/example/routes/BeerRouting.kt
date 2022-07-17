@@ -1,6 +1,7 @@
 package com.example.routes
 
 import com.example.plugins.getAllBeers
+import com.example.plugins.getBeerByID
 import io.ktor.http.*
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
@@ -22,6 +23,13 @@ fun Route.beerRouting(){
         }
         // Get data for specific beer id.
         get("/{id}") {
+            // Run Coroutine.
+            runBlocking {
+                launch {
+                    val beer = getBeerByID(call.parameters["id"])
+                    call.respond(HttpStatusCode.OK, beer)
+                }
+            }
         }
     }
 }

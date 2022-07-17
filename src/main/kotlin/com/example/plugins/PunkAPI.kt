@@ -10,6 +10,23 @@ import kotlinx.serialization.json.*
 
 // Return list of beers from page 1.
 suspend fun getAllBeers(): List<Beer>{
+    val client = createClient()
+    val response: List<Beer> = client.get("https://api.punkapi.com/v2/beers").body()
+    client.close()
+    return response
+}
+
+// Return beer from specific id, using param id.
+suspend fun getBeerByID(id: String?): Beer{
+    val client = createClient()
+    var response = client.get("https://api.punkapi.com/v2/beers/$id").body()
+
+    client.close()
+    return response[0]
+}
+
+// Create httpclient for use in each http get call.
+fun createClient(): HttpClient{
     val client = HttpClient{
         install(ContentNegotiation){
             json(Json {
@@ -18,7 +35,5 @@ suspend fun getAllBeers(): List<Beer>{
             })
         }
     }
-    val response: List<Beer> = client.get("https://api.punkapi.com/v2/beers").body()
-    client.close()
-    return response
+    return client
 }
