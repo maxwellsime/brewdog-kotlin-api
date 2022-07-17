@@ -12,6 +12,7 @@ import kotlinx.serialization.json.*
 suspend fun getAllBeers(): List<Beer>{
     val client = createClient()
     val response: List<Beer> = client.get("https://api.punkapi.com/v2/beers").body()
+
     client.close()
     return response
 }
@@ -23,6 +24,15 @@ suspend fun getBeerByID(id: String?): Beer{
 
     client.close()
     return response[0]
+}
+
+// Return beer with specific name, using param name.
+suspend fun getBeerByName(name: String?): List<Beer>{
+    val client = createClient()
+    val response = client.get("https://api.punkapi.com/v2/beers?beer_name=$name").body()
+
+    client.close()
+    return response
 }
 
 // Create httpclient for use in each http get call.
