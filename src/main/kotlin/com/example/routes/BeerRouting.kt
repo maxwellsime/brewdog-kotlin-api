@@ -11,6 +11,8 @@ import io.ktor.server.response.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+// Routing for beer information using the PUNKAPI to make API calls.
+// Responds with JSON with 200 OK or JSON filled with error message and relevant errorcode.
 fun Route.beerRouting(){
     route("/beers"){
         // Get data for a list of beers.
@@ -18,15 +20,15 @@ fun Route.beerRouting(){
             val query = call.request.queryString().split("=")
 
             // Checks if request is searching for specific beer name.
-            if(query[0] == "beer_name"){
+            if(query[0] == "beer_name" && query[1].isNotEmpty()){
                 runBlocking {
                     launch {
                         val beers = getBeerByName(query[1])
 
                         if(beers.isEmpty()){
-                            call.respond(HttpStatusCode.NotFound, "No beers with names including: ${query[1]}.")
+                            call.respond(status = HttpStatusCode.NotFound,"No beers with names including: ${query[1]}.")
                         } else {
-                            call.respond(HttpStatusCode.OK, beers)
+                            call.respond(status = HttpStatusCode.OK, beers)
                         }
                     }
                 }
@@ -37,8 +39,7 @@ fun Route.beerRouting(){
                 // Validation to check query[1] is a number and > 0.
                 // UInt does not accept negative numbers
                 if(query[1].toUIntOrNull() == null){
-                    println("Not a positive integer")
-                    call.respond(HttpStatusCode.BadRequest,"${query[1]} is not a valid page number.")
+                    call.respond(status = HttpStatusCode.BadRequest, "${query[1]} is not a valid page number.")
                 }
 
                 runBlocking {
@@ -46,7 +47,7 @@ fun Route.beerRouting(){
                         val beers = getAllBeers(query[1])
 
                         if(beers.isEmpty()){
-                            call.respond(HttpStatusCode.NotFound, "Page ${query[1]} does not exist.")
+                            call.respond(status = HttpStatusCode.NotFound, "Page ${query[1]} does not exist.")
                         } else{
                             call.respond(HttpStatusCode.OK, beers)
                         }
@@ -70,7 +71,7 @@ fun Route.beerRouting(){
 
                 // Validation to check id is a positive integer.
                 if(id.toUIntOrNull() == null){
-                    call.respond(HttpStatusCode.BadRequest,"$id is not a valid identifier. Identifiers must be short positive integers.")
+                    call.respond(status = HttpStatusCode.BadRequest, "$id is not a valid identifier. Identifiers must be short positive integers.")
                 }
 
                 // Run Coroutine.
@@ -79,7 +80,7 @@ fun Route.beerRouting(){
                         val beer = getBeerByID(call.parameters["id"])
 
                         if(beer.isEmpty()){
-                            call.respond(HttpStatusCode.NotFound, "Beer with the id: $id does not exist.")
+                            call.respond(status = HttpStatusCode.NotFound, "Beer with the id: $id does not exist.")
                         } else{
                             call.respond(HttpStatusCode.OK, beer[0])
                         }
