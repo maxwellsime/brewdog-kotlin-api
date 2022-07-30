@@ -8,5 +8,3 @@ data class Beer (
     val name: String,
     val description: String
 )
-
-val beerStorage = mutableListOf<Beer>()
