@@ -1,14 +1,14 @@
-package com.example.routes
+package com.punk.routes
 
-import com.example.models.ErrorMessage
-import com.example.plugins.getAllBeers
-import com.example.plugins.getBeerByID
-import com.example.plugins.getBeerByName
+import com.punk.libraries.PunkClient
+import com.punk.models.ErrorMessage
 import io.ktor.http.*
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+
+val punkClient = PunkClient()
 
 // Routing for beer information using the PUNKAPI to make API calls.
 // Responds with JSON with 200 OK or JSON filled with error message and relevant errorcode.
@@ -20,7 +20,7 @@ fun Route.beerRouting(){
 
             // Checks if request is searching for specific beer name.
             if(query[0] == "beer_name" && query[1].isNotEmpty()){
-                val beers = getBeerByName(query[1])
+                val beers = punkClient.getBeerByName(query[1])
 
                 if(beers.isEmpty()){
                     val msg = ErrorMessage("No beer found with the name ${query[1]}")
@@ -39,7 +39,7 @@ fun Route.beerRouting(){
                     call.respond(status = HttpStatusCode.BadRequest, msg)
                 }
 
-                val beers = getAllBeers(query[1])
+                val beers = punkClient.getAllBeers(query[1])
                 if(beers.isEmpty()){
                     val msg = ErrorMessage("Page ${query[1]} does not exist.")
                     call.respond(status = HttpStatusCode.NotFound, msg)
@@ -48,7 +48,7 @@ fun Route.beerRouting(){
                 }
             }
 
-            val beers = getAllBeers()
+            val beers = punkClient.getAllBeers()
             call.respond(HttpStatusCode.OK, beers)
         }
         // Get data for specific beer id.
@@ -63,7 +63,7 @@ fun Route.beerRouting(){
                     call.respond(status = HttpStatusCode.BadRequest, msg)
                 }
 
-                val beer = getBeerByID(call.parameters["id"])
+                val beer = punkClient.etBeerByID(call.parameters["id"])
 
                 if(beer.isEmpty()){
                     val msg = ErrorMessage("Beer with the id: $id does not exist.")

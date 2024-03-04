@@ -1,8 +1,8 @@
-package com.example.plugins
+package com.punk.plugins
 
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
-import com.example.routes.beerRouting
+import com.punk.routes.beerRouting
 
 fun Application.configureRouting() {
     routing {
