@@ -1,6 +1,6 @@
 package com.punk
 
-import com.punk.plugins.configureRouting
+import com.punk.utilities.configureRouting
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
