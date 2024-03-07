@@ -15,14 +15,14 @@ class PunkClient {
     suspend fun getAllBeers(): List<Beer> =
         httpClient.get("${API_URL}beers").body()
 
-    suspend fun getAllBeers(page: String?): List<Beer> =
+    suspend fun getAllBeers(page: Int?): List<Beer> =
         try {
             httpClient.get("${API_URL}beers?page=$page").body()
         } catch(e: Exception) {
             throw e
         }
 
-    suspend fun getBeerByID(id: String?): List<Beer> =
+    suspend fun getBeerByID(id: Int?): List<Beer> =
         try {
             httpClient.get("${API_URL}beers/$id").body()
         } catch(e: Exception) {
