@@ -3,7 +3,6 @@ package com.punk.routes
 import com.punk.exceptions.BeerNotFoundException
 import com.punk.exceptions.NoBeersFoundException
 import com.punk.models.BeersRequest
-import com.punk.models.ErrorMessage
 import com.punk.services.BeerService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.*
