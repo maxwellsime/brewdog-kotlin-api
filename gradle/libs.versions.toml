@@ -1,0 +1,30 @@
+[versions]
+kotlinVersion = "1.7.10"
+kotestVersion = "5.8.1"
+ktorVersion = "2.0.3"
+loggingVersion = "6.0.3"
+mockkVersion = "1.13.10"
+
+[libraries]
+ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktorVersion" }
+ktor-client-content = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktorVersion" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorVersion" }
+ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktorVersion" }
+ktor-serialization-json-jvm = { group = "io.ktor", name = "ktor-serialization-kotlinx-json-jvm", version.ref = "ktorVersion" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
+ktor-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation-jvm", version.ref = "ktorVersion" }
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktorVersion" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm", version.ref = "ktorVersion" }
+ktor-server-test = { group = "io.ktor", name= "ktor-server-tests-jvm", version.ref = "ktorVersion"}
+kotlin-logging = { group = "io.github.oshai", name= "kotlin-logging-jvm", version.ref = "loggingVersion"}
+kotest = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotestVersion" }
+mockk = { group = "io.mockk", name="mockk", version.ref = "mockkVersion" }
+
+[bundles]
+ktor-client = ["ktor-client", "ktor-client-content", "ktor-client-core", "ktor-client-json"]
+ktor-serialization = ["ktor-serialization-json", "ktor-content-negotiation", "ktor-serialization-json-jvm"]
+ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-test"]
+
+[plugins]
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion"}
+kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotestVersion" }
