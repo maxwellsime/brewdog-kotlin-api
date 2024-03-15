@@ -1,30 +1,35 @@
 [versions]
-kotlinVersion = "1.7.10"
-kotestVersion = "5.8.1"
-ktorVersion = "2.0.3"
-loggingVersion = "6.0.3"
-mockkVersion = "1.13.10"
+kotlin-version = "1.7.10"
+kotest-version = "5.8.1"
+ktor-version = "2.0.3"
+logging-version = "6.0.3"
+mockk-version = "1.13.10"
+koin-version = "3.5.3"
 
 [libraries]
-ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktorVersion" }
-ktor-client-content = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktorVersion" }
-ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorVersion" }
-ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktorVersion" }
-ktor-serialization-json-jvm = { group = "io.ktor", name = "ktor-serialization-kotlinx-json-jvm", version.ref = "ktorVersion" }
-ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
-ktor-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation-jvm", version.ref = "ktorVersion" }
-ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktorVersion" }
-ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm", version.ref = "ktorVersion" }
-ktor-server-test = { group = "io.ktor", name= "ktor-server-tests-jvm", version.ref = "ktorVersion"}
-kotlin-logging = { group = "io.github.oshai", name= "kotlin-logging-jvm", version.ref = "loggingVersion"}
-kotest = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotestVersion" }
-mockk = { group = "io.mockk", name="mockk", version.ref = "mockkVersion" }
+ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor-version" }
+ktor-client-content = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-version" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }
+ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktor-version" }
+ktor-serialization-json-jvm = { group = "io.ktor", name = "ktor-serialization-kotlinx-json-jvm", version.ref = "ktor-version" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+ktor-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation-jvm", version.ref = "ktor-version" }
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktor-version" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm", version.ref = "ktor-version" }
+ktor-server-test = { group = "io.ktor", name= "ktor-server-tests-jvm", version.ref = "ktor-version"}
+kotlin-logging = { group = "io.github.oshai", name= "kotlin-logging-jvm", version.ref = "logging-version"}
+kotest = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest-version" }
+mockk = { group = "io.mockk", name="mockk", version.ref = "mockk-version" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin-version" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin-version" }
+koin-logger = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin-version" }
 
 [bundles]
 ktor-client = ["ktor-client", "ktor-client-content", "ktor-client-core", "ktor-client-json"]
 ktor-serialization = ["ktor-serialization-json", "ktor-content-negotiation", "ktor-serialization-json-jvm"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-test"]
+koin = ["koin-core", "koin-ktor", "koin-logger"]
 
 [plugins]
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion"}
-kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotestVersion" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version"}
+kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest-version" }
