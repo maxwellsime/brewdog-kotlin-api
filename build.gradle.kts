@@ -13,7 +13,7 @@ application {
 
 plugins {
     application
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.9.0"
     "version-catalog"
 }
 
@@ -31,4 +31,8 @@ dependencies {
     testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotest)
     testImplementation(libs.mockk)
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }

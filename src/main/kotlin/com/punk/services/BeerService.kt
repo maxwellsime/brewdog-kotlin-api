@@ -8,7 +8,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
-class BeerService(private val punkClient: PunkClient) {
+class BeerService(
+    private val punkClient: PunkClient
+) {
 
     suspend fun getBeers(page: Int?): BeersResponse {
         val beers = try {

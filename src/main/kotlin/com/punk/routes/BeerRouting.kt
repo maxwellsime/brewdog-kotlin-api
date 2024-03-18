@@ -15,8 +15,6 @@ import io.ktor.server.response.*
 
 private val logger = KotlinLogging.logger {}
 
-// Routing for beer information using the PUNKAPI to make API calls.
-// Responds with JSON with 200 OK or JSON filled with error message and relevant errorcode.
 fun Route.beerRouting(beerService: BeerService) {
     route("/beers") {
         get {
@@ -34,7 +32,7 @@ fun Route.beerRouting(beerService: BeerService) {
                 logger.error(e) { "Request failed to parse into BeersRequest data class." }
                 call.respond(
                     HttpStatusCode.BadRequest,
-                    BadRequestException(e.message ?: "Request failed to parse into BeerRequest data class", e)
+                    e.message ?: "Request failed to parse into BeerRequest data class"
                 )
             } catch(e: NoBeersFoundException) {
                 logger.error(e) { "No beers ." }
@@ -54,7 +52,7 @@ fun Route.beerRouting(beerService: BeerService) {
                 logger.error(e) { "Request failed to parse into BeersRequest data class." }
                 call.respond(
                     HttpStatusCode.BadRequest,
-                    BadRequestException(e.message ?: "Request failed to parse into Int data class", e)
+                    e.message ?: "Request failed to parse into Int data class"
                 )
             } catch(e: BeerNotFoundException) {
                 logger.error(e) { "No beer found for id: $request." }
