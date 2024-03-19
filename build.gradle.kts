@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.bundles.ktor.serialization)
     implementation(libs.kotlin.logging)
     implementation(libs.bundles.koin)
+    implementation(libs.sl4j.logger)
     testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotest)
     testImplementation(libs.mockk)

@@ -10,8 +10,6 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
-import org.koin.core.context.loadKoinModules
-import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 
 private val punkClient = PunkClient()

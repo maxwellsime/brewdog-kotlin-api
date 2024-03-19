@@ -5,6 +5,7 @@ ktor-version = "2.0.3"
 logging-version = "6.0.3"
 mockk-version = "1.13.10"
 koin-version = "3.5.3"
+slf4j-version = "2.0.9"
 
 [libraries]
 ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor-version" }
@@ -23,6 +24,7 @@ mockk = { group = "io.mockk", name="mockk", version.ref = "mockk-version" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin-version" }
 koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin-version" }
 koin-logger = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin-version" }
+sl4j-logger = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j-version" }
 
 [bundles]
 ktor-client = ["ktor-client", "ktor-client-content", "ktor-client-core", "ktor-client-json"]
