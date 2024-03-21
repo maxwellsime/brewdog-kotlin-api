@@ -6,7 +6,9 @@ import org.koin.dsl.module
 
 val punkModule = module {
 
-    single<PunkClient> { PunkClient() }
+    val punkApiUrl = "https://api.punkapi.com/v2/"
+
+    single<PunkClient> { PunkClient(punkApiUrl) }
 
     single<BeerService> { BeerService(get()) }
 }

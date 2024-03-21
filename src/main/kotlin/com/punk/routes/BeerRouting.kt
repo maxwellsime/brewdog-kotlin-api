@@ -15,18 +15,20 @@ import io.ktor.server.response.*
 
 private val logger = KotlinLogging.logger {}
 
-fun Route.beerRouting(beerService: BeerService) {
+fun Route.beerRouting(
+    beerService: BeerService
+) {
     route("/beers") {
         get {
             try {
                 logger.info { "Searching for beers." }
-                val request = call.receive<BeersRequest>()
-                if(request.name != null) {
+                val request = call.receive<String>()
+                if(request != null) {
                     logger.info { "Searching for beers by name." }
-                    call.respond(HttpStatusCode.OK, beerService.getBeersByName(request.name))
+                    call.respond(HttpStatusCode.OK, beerService.getBeersByName("request.name"))
                 } else {
                     logger.info { "Searching for beers." }
-                    call.respond(HttpStatusCode.OK, beerService.getBeers(request.page))
+                    call.respond(HttpStatusCode.OK, beerService.getBeers(1))//request.page))
                 }
             } catch(e: ContentTransformationException) {
                 logger.error(e) { "Request failed to parse into BeersRequest data class." }

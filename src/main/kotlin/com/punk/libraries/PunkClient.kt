@@ -8,9 +8,9 @@ import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.*
 
-class PunkClient {
-
-    private lateinit var httpClient: HttpClient
+class PunkClient(
+    private val httpClient: HttpClient
+) {
 
     suspend fun getAllBeers(): List<Beer> =
         httpClient.get("${API_URL}beers").body()
@@ -36,19 +36,25 @@ class PunkClient {
             throw e
         }
 
-    operator fun PunkClient.invoke() {
-        httpClient = HttpClient{
-            install(ContentNegotiation){
-                json(Json {
-                    ignoreUnknownKeys = true
-                    expectSuccess = false
-                })
-            }
-        }
-        // auth here
-    }
-
     companion object {
-        private const val API_URL = "https://api.punkapi.com/v2/"
+        operator fun invoke(
+            apiUrl: String
+        ): PunkClient {
+            val httpClient = HttpClient{
+                install(ContentNegotiation){
+                    json(Json {
+                        ignoreUnknownKeys = true
+                        expectSuccess = false
+                    })
+                }
+            }
+
+            API_URL = apiUrl
+
+            // auth here
+            return PunkClient(httpClient)
+        }
+
+        private lateinit var API_URL: String
     }
 }
