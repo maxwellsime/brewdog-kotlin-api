@@ -5,7 +5,7 @@ import com.punk.models.BeersResponse
 
 object BeerTestFixtures {
 
-    private const val ID = 1
+    const val ID = 1
     private const val BEER_NAME = "beer name"
     private const val BEER_DESCRIPTION = "beer description"
 
