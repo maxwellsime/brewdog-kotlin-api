@@ -12,7 +12,7 @@ class BeerService(
     private val punkClient: PunkClient
 ) {
 
-    suspend fun getBeers(page: Int?): BeersResponse {
+    suspend fun getBeers(page: Int? = null): BeersResponse {
         val beers = try {
             if(page != null)
                 punkClient.getAllBeers(page)

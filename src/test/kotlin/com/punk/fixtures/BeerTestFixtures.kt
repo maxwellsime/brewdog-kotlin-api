@@ -10,6 +10,7 @@ object BeerTestFixtures {
     private const val BEER_DESCRIPTION = "beer description"
 
 
-    private val getBeersGenericBeers = Beer(ID, BEER_NAME, BEER_DESCRIPTION)
-    val getBeersGenericResponse = BeersResponse(listOf(getBeersGenericBeers))
+    private val genericBeer = Beer(ID, BEER_NAME, BEER_DESCRIPTION)
+    val genericBeerList = listOf(genericBeer)
+    val getBeersGenericResponse = BeersResponse(listOf(genericBeer))
 }
