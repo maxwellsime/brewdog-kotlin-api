@@ -1,9 +1,3 @@
-val ktorVersion: String by project
-val kotlinVersion: String by project
-val loggingVersion: String by project
-val kotestVersion: String by project
-val mockkVersion: String by project
-
 group = "com.punk"
 version = "0.0.2"
 
@@ -15,6 +9,7 @@ plugins {
     application
     kotlin("jvm") version "1.9.0"
     "version-catalog"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
 }
 
 repositories {
