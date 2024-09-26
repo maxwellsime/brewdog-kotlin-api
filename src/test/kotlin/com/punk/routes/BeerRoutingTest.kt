@@ -1,5 +1,6 @@
 package com.punk.routes
 
+import com.punk.exceptions.NoBeersFoundException
 import com.punk.fixtures.BeerTestFixtures
 import com.punk.fixtures.BeerTestFixtures.getBeersGenericResponse
 import com.punk.models.BeersRequest
@@ -33,6 +34,28 @@ class BeerRoutingTest : ShouldSpec({
     }
 
     context("POST /beers route") {
+        should("Return a list of beer models from page 1 when given a name") {
+            // GIVEN
+            val requestName = "name"
+            coEvery { mockBeerService.getBeersByName(requestName) } returns getBeersGenericResponse
+
+            // WHEN
+            val response = withBaseTestApplication(mockBeerService) {
+                post("/beers") {
+                    contentType(ContentType.Application.Json)
+                    header(HttpHeaders.ContentType, ContentType.Application.Json)
+                    setBody(Json.encodeToString(BeersRequest(requestName, null)))
+                    accept(ContentType.Application.Json)
+                }
+            }
+
+            // THEN
+            with(response!!) {
+                this.status shouldBe HttpStatusCode.OK
+                this.bodyAsText() shouldBe Json.encodeToString(getBeersGenericResponse)
+            }
+            coVerify(exactly = 1) { mockBeerService.getBeersByName(requestName) }
+        }
         should("Return a list of beer models from page 1 when given no request") {
             // GIVEN
             coEvery { mockBeerService.getBeers(null) } returns getBeersGenericResponse
@@ -48,13 +71,47 @@ class BeerRoutingTest : ShouldSpec({
             }
 
             // THEN
-            with(response) {
-                if(this != null) {
-                    this.status shouldBe HttpStatusCode.OK
-                    this.bodyAsText() shouldBe Json.encodeToString(getBeersGenericResponse)
-                }
-                coVerify(exactly = 1) { mockBeerService.getBeers(null) }
+            with(response!!) {
+                this.status shouldBe HttpStatusCode.OK
+                this.bodyAsText() shouldBe Json.encodeToString(getBeersGenericResponse)
             }
+            coVerify(exactly = 1) { mockBeerService.getBeers(null) }
+        }
+        should("Return NotFound when NoBeersFoundException thrown by service") {
+            // GIVEN
+            coEvery { mockBeerService.getBeers(null) } throws NoBeersFoundException("ass")
+
+            // WHEN
+            val response = withBaseTestApplication(mockBeerService) {
+                post("/beers") {
+                    contentType(ContentType.Application.Json)
+                    header(HttpHeaders.ContentType, ContentType.Application.Json)
+                    setBody(Json.encodeToString(BeersRequest(null, null)))
+                    accept(ContentType.Application.Json)
+                }
+            }
+
+            // THEN
+            response!!.status shouldBe HttpStatusCode.NotFound
+            coVerify(exactly = 1) { mockBeerService.getBeers(null) }
+        }
+        should("Return InternalServerError when Exception thrown by service") {
+            // GIVEN
+            coEvery { mockBeerService.getBeers(null) } throws Exception()
+
+            // WHEN
+            val response = withBaseTestApplication(mockBeerService) {
+                post("/beers") {
+                    contentType(ContentType.Application.Json)
+                    header(HttpHeaders.ContentType, ContentType.Application.Json)
+                    setBody(Json.encodeToString(BeersRequest(null, null)))
+                    accept(ContentType.Application.Json)
+                }
+            }
+
+            // THEN
+            response!!.status shouldBe HttpStatusCode.InternalServerError
+            coVerify(exactly = 1) { mockBeerService.getBeers(null) }
         }
     }
 

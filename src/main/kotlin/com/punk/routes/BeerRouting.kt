@@ -30,15 +30,9 @@ fun Route.beerRouting(
                     logger.info { "Searching for beers." }
                     call.respond(HttpStatusCode.OK, beerService.getBeers(request.page))
                 }
-            } catch(e: ContentTransformationException) {
-                logger.error(e) { "Request failed to parse into BeersRequest data class." }
-                call.respond(
-                    HttpStatusCode.BadRequest,
-                    e.message ?: "Request failed to parse into BeerRequest data class"
-                )
             } catch(e: NoBeersFoundException) {
-                logger.error(e) { "No beers ." }
-                call.respond(HttpStatusCode.NotFound, e.toNotFoundException())
+                logger.error(e) { "No beers found." }
+                call.respond(HttpStatusCode.NotFound, e.message)
             } catch(e: Exception) {
                 logger.error(e) { "Request failed due to unspecified error." }
                 call.respond(HttpStatusCode.InternalServerError)
@@ -58,7 +52,7 @@ fun Route.beerRouting(
                 )
             } catch(e: BeerNotFoundException) {
                 logger.error(e) { "No beer found for id: $request." }
-                call.respond(HttpStatusCode.NotFound, e.toNotFoundException())
+                call.respond(HttpStatusCode.NotFound, e.message)
             } catch(e: Exception) {
                 logger.error(e) { "Request failed due to unspecified error." }
                 call.respond(HttpStatusCode.InternalServerError)

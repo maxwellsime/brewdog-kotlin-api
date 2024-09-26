@@ -7,7 +7,4 @@ import kotlinx.serialization.Serializable
 data class BeerNotFoundException(
     val beerId: Int,
     override val message: String = "Beer not found $beerId",
-): Exception() {
-
-    fun toNotFoundException() = NotFoundException(message)
-}
+): Exception()
