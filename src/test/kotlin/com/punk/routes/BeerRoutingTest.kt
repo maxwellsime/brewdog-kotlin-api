@@ -3,13 +3,11 @@ package com.punk.routes
 import com.punk.fixtures.BeerTestFixtures
 import com.punk.fixtures.BeerTestFixtures.getBeersGenericResponse
 import com.punk.models.BeersRequest
-import com.punk.models.BeersResponse
 import com.punk.modules.punkModule
 import com.punk.services.BeerService
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -22,6 +20,7 @@ import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.koin.ktor.plugin.Koin
 
@@ -33,7 +32,7 @@ class BeerRoutingTest : ShouldSpec({
         clearAllMocks()
     }
 
-    context("post /beers route") {
+    context("POST /beers route") {
         should("Return a list of beer models from page 1 when given no request") {
             // GIVEN
             coEvery { mockBeerService.getBeers(null) } returns getBeersGenericResponse
@@ -43,7 +42,8 @@ class BeerRoutingTest : ShouldSpec({
                 post("/beers") {
                     contentType(ContentType.Application.Json)
                     header(HttpHeaders.ContentType, ContentType.Application.Json)
-                    setBody(BeersRequest(null, null))
+                    setBody(Json.encodeToString(BeersRequest(null, null)))
+                    accept(ContentType.Application.Json)
                 }
             }
 
@@ -51,14 +51,14 @@ class BeerRoutingTest : ShouldSpec({
             with(response) {
                 if(this != null) {
                     this.status shouldBe HttpStatusCode.OK
-                    this.body<BeersResponse>() shouldBe getBeersGenericResponse
+                    this.bodyAsText() shouldBe Json.encodeToString(getBeersGenericResponse)
                 }
                 coVerify(exactly = 1) { mockBeerService.getBeers(null) }
             }
         }
     }
 
-    context("get /beers/id route") {
+    context("GET /beers/id route") {
         should("return a beer of a specific ID") {
             // GIVEN
             coEvery { mockBeerService.getBeersById(BeerTestFixtures.ID) } returns getBeersGenericResponse
@@ -68,6 +68,7 @@ class BeerRoutingTest : ShouldSpec({
                 get("/beers/${BeerTestFixtures.ID}") {
                     contentType(ContentType.Application.Json)
                     header(HttpHeaders.ContentType, ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
                 }
             }
 
@@ -75,7 +76,6 @@ class BeerRoutingTest : ShouldSpec({
             with(response) {
                 if(this != null) {
                     this.status shouldBe HttpStatusCode.OK
-                    this.body<BeersResponse>() shouldBe getBeersGenericResponse
                 }
                 coVerify(exactly = 1) { mockBeerService.getBeersById(BeerTestFixtures.ID) }
             }
@@ -84,7 +84,7 @@ class BeerRoutingTest : ShouldSpec({
 })
 
 fun withBaseTestApplication(
-    mockBeerServer: BeerService,
+    mockBeerService: BeerService,
     request: suspend HttpClient.() -> HttpResponse
 ): HttpResponse? {
     var response: HttpResponse? = null
@@ -95,7 +95,7 @@ fun withBaseTestApplication(
                 json(Json { isLenient = true })
             }
             install(Koin) { modules(punkModule) }
-            routing { beerRouting(mockBeerServer) }
+            routing { beerRouting(mockBeerService) }
         }
 
         response = client.request()

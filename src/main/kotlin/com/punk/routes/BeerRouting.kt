@@ -23,9 +23,9 @@ fun Route.beerRouting(
             try {
                 logger.info { "Searching for beers." }
                 val request = call.receive<BeersRequest>()
-                if(request != null) {
+                if(request.name != null) {
                     logger.info { "Searching for beers by name." }
-                    call.respond(HttpStatusCode.OK, beerService.getBeersByName("request.name"))
+                    call.respond(HttpStatusCode.OK, beerService.getBeersByName(request.name))
                 } else {
                     logger.info { "Searching for beers." }
                     call.respond(HttpStatusCode.OK, beerService.getBeers(request.page))
