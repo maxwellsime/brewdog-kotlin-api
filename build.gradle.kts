@@ -21,10 +21,10 @@ dependencies {
     implementation(libs.bundles.ktor.client)
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.serialization)
-    implementation(libs.kotlin.logging)
     implementation(libs.bundles.koin)
+    implementation(libs.kotlin.logging)
     implementation(libs.sl4j.logger)
-    testImplementation(libs.ktor.server.test)
+    testImplementation(libs.bundles.ktor.test)
     testImplementation(libs.kotest)
     testImplementation(libs.mockk)
 }

@@ -11,12 +11,13 @@ ktor-client = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor
 ktor-client-content = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }
 ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktor-version" }
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor-version" }
 ktor-serialization-json-jvm = { group = "io.ktor", name = "ktor-serialization-kotlinx-json-jvm", version.ref = "ktor-version" }
 ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
 ktor-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation-jvm", version.ref = "ktor-version" }
 ktor-server-core = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktor-version" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty-jvm", version.ref = "ktor-version" }
-ktor-server-test = { group = "io.ktor", name= "ktor-server-tests-jvm", version.ref = "ktor-version"}
+ktor-server-test = { group = "io.ktor", name = "ktor-server-tests-jvm", version.ref = "ktor-version"}
 kotlin-logging = { group = "io.github.oshai", name= "kotlin-logging-jvm", version.ref = "logging-version"}
 kotest = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest-version" }
 mockk = { group = "io.mockk", name="mockk", version.ref = "mockk-version" }
@@ -29,4 +30,5 @@ sl4j-logger = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j
 ktor-client = ["ktor-client", "ktor-client-content", "ktor-client-core", "ktor-client-json"]
 ktor-serialization = ["ktor-serialization-json", "ktor-content-negotiation", "ktor-serialization-json-jvm"]
 ktor-server = ["ktor-server-core", "ktor-server-netty", "ktor-server-test"]
+ktor-test = ["ktor-client-mock", "ktor-server-test"]
 koin = ["koin-core", "koin-ktor", "koin-logger"]

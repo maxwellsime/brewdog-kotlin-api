@@ -3,6 +3,8 @@ package com.punk.libraries
 import com.punk.models.Beer
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.engine.*
+import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
@@ -16,31 +18,20 @@ class PunkClient(
         httpClient.get("${API_URL}beers").body()
 
     suspend fun getAllBeers(page: Int?): List<Beer> =
-        try {
-            httpClient.get("${API_URL}beers?page=$page").body()
-        } catch(e: Exception) {
-            throw e
-        }
+        httpClient.get("${API_URL}beers?page=$page").body()
 
     suspend fun getBeerByID(id: Int?): List<Beer> =
-        try {
-            httpClient.get("${API_URL}beers/$id").body()
-        } catch(e: Exception) {
-            throw e
-        }
+        httpClient.get("${API_URL}beers/$id").body()
 
     suspend fun getBeersByName(name: String?): List<Beer> =
-        try {
-            httpClient.get("${API_URL}beers?beer_name=$name").body()
-        } catch(e: Exception) {
-            throw e
-        }
+        httpClient.get("${API_URL}beers?beer_name=$name").body()
 
     companion object {
         operator fun invoke(
-            apiUrl: String
+            apiUrl: String,
+            engine: HttpClientEngine = CIO.create()
         ): PunkClient {
-            val httpClient = HttpClient{
+            val httpClient = HttpClient(engine) {
                 install(ContentNegotiation){
                     json(Json {
                         ignoreUnknownKeys = true
