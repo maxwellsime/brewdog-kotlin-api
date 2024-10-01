@@ -1,10 +1,10 @@
 package com.punk.routes
 
-import com.punk.exceptions.NoBeersFoundException
 import com.punk.fixtures.BeerTestFixtures
 import com.punk.fixtures.BeerTestFixtures.getBeersGenericResponse
+import com.punk.fixtures.BeerTestFixtures.getBeersGenericResponseJson
+import com.punk.fixtures.BeerTestFixtures.noBeersFoundException
 import com.punk.models.BeersRequest
-import com.punk.modules.punkModule
 import com.punk.services.BeerService
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
@@ -23,7 +23,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.koin.ktor.plugin.Koin
 
 class BeerRoutingTest : ShouldSpec({
 
@@ -52,7 +51,7 @@ class BeerRoutingTest : ShouldSpec({
             // THEN
             with(response!!) {
                 this.status shouldBe HttpStatusCode.OK
-                this.bodyAsText() shouldBe Json.encodeToString(getBeersGenericResponse)
+                this.bodyAsText() shouldBe getBeersGenericResponseJson
             }
             coVerify(exactly = 1) { mockBeerService.getBeersByName(requestName) }
         }
@@ -73,13 +72,13 @@ class BeerRoutingTest : ShouldSpec({
             // THEN
             with(response!!) {
                 this.status shouldBe HttpStatusCode.OK
-                this.bodyAsText() shouldBe Json.encodeToString(getBeersGenericResponse)
+                this.bodyAsText() shouldBe getBeersGenericResponseJson
             }
             coVerify(exactly = 1) { mockBeerService.getBeers(null) }
         }
         should("Return NotFound when NoBeersFoundException thrown by service") {
             // GIVEN
-            coEvery { mockBeerService.getBeers(null) } throws NoBeersFoundException("ass")
+            coEvery { mockBeerService.getBeers(null) } throws noBeersFoundException
 
             // WHEN
             val response = withBaseTestApplication(mockBeerService) {
@@ -116,7 +115,7 @@ class BeerRoutingTest : ShouldSpec({
     }
 
     context("GET /beers/id route") {
-        should("return a beer of a specific ID") {
+        should("Return a beer of a specific ID") {
             // GIVEN
             coEvery { mockBeerService.getBeersById(BeerTestFixtures.ID) } returns getBeersGenericResponse
 
@@ -137,6 +136,65 @@ class BeerRoutingTest : ShouldSpec({
                 coVerify(exactly = 1) { mockBeerService.getBeersById(BeerTestFixtures.ID) }
             }
         }
+        should("Return BadRequest when given ID is incorrect type") {
+            // WHEN
+            val response = withBaseTestApplication(mockBeerService) {
+                get("/beers/x") {
+                    contentType(ContentType.Application.Json)
+                    header(HttpHeaders.ContentType, ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
+                }
+            }
+
+            // THEN
+            with(response) {
+                if(this != null) {
+                    this.status shouldBe HttpStatusCode.BadRequest
+                }
+            }
+        }
+        should("Return NotFound when no beers have been found using given ID"){
+            // GIVEN
+            coEvery { mockBeerService.getBeersById(BeerTestFixtures.ID) } throws noBeersFoundException
+
+            // WHEN
+            val response = withBaseTestApplication(mockBeerService) {
+                get("/beers/${BeerTestFixtures.ID}") {
+                    contentType(ContentType.Application.Json)
+                    header(HttpHeaders.ContentType, ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
+                }
+            }
+
+            // THEN
+            with(response) {
+                if(this != null) {
+                    this.status shouldBe HttpStatusCode.NotFound
+                }
+                coVerify(exactly = 1) { mockBeerService.getBeersById(BeerTestFixtures.ID) }
+            }
+        }
+        should("Return InternalServerError when an unprepared exception occurs"){
+            // GIVEN
+            coEvery { mockBeerService.getBeersById(BeerTestFixtures.ID) } throws Exception()
+
+            // WHEN
+            val response = withBaseTestApplication(mockBeerService) {
+                get("/beers/${BeerTestFixtures.ID}") {
+                    contentType(ContentType.Application.Json)
+                    header(HttpHeaders.ContentType, ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
+                }
+            }
+
+            // THEN
+            with(response) {
+                if(this != null) {
+                    this.status shouldBe HttpStatusCode.InternalServerError
+                }
+                coVerify(exactly = 1) { mockBeerService.getBeersById(BeerTestFixtures.ID) }
+            }
+        }
     }
 })
 
@@ -151,7 +209,6 @@ fun withBaseTestApplication(
             install(ContentNegotiation) {
                 json(Json { isLenient = true })
             }
-            install(Koin) { modules(punkModule) }
             routing { beerRouting(mockBeerService) }
         }
 

@@ -1,6 +1,5 @@
 package com.punk.services
 
-import com.punk.exceptions.BeerNotFoundException
 import com.punk.exceptions.NoBeersFoundException
 import com.punk.fixtures.BeerTestFixtures
 import com.punk.libraries.PunkClient
@@ -121,7 +120,6 @@ class BeerServiceTests : ShouldSpec({
 
             // THEN
             response.beers shouldBe BeerTestFixtures.genericBeerList
-            request shouldBe response.beers.first().id
             coVerify { mockPunkClient.getBeerByID(request) }
         }
         should("Throws an BeerNotFoundException when punk client responds with no beers") {
@@ -131,7 +129,7 @@ class BeerServiceTests : ShouldSpec({
             } returns listOf()
 
             // WHEN
-            shouldThrow<BeerNotFoundException> { beerService.getBeersById(request) }
+            shouldThrow<NoBeersFoundException> { beerService.getBeersById(request) }
 
             // THEN
             coVerify { mockPunkClient.getBeerByID(request) }

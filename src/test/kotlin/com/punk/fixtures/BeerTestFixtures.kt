@@ -1,7 +1,10 @@
 package com.punk.fixtures
 
+import com.punk.exceptions.NoBeersFoundException
 import com.punk.models.Beer
 import com.punk.models.BeersResponse
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 object BeerTestFixtures {
 
@@ -13,4 +16,7 @@ object BeerTestFixtures {
     private val genericBeer = Beer(ID, BEER_NAME, BEER_DESCRIPTION)
     val genericBeerList = listOf(genericBeer)
     val getBeersGenericResponse = BeersResponse(listOf(genericBeer))
+    val getBeersGenericResponseJson = Json.encodeToString(getBeersGenericResponse)
+
+    val noBeersFoundException = NoBeersFoundException("getBeersByName $BEER_NAME")
 }

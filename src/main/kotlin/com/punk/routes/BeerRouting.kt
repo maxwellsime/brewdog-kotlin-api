@@ -1,6 +1,5 @@
 package com.punk.routes
 
-import com.punk.exceptions.BeerNotFoundException
 import com.punk.exceptions.NoBeersFoundException
 import com.punk.models.BeersRequest
 import com.punk.services.BeerService
@@ -8,9 +7,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.*
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.*
 import io.ktor.server.request.*
-import io.ktor.server.request.ContentTransformationException
 import io.ktor.server.response.*
 
 private val logger = KotlinLogging.logger {}
@@ -40,18 +37,18 @@ fun Route.beerRouting(
         }
 
         get("/{id}") {
-            val request = call.receive<Int>()
+            val request = call.parameters["id"]
             try {
                 logger.info { "Searching for beer by ID: $request." }
-                call.respond(HttpStatusCode.OK, beerService.getBeersById(request))
-            } catch(e: ContentTransformationException) {
-                logger.error(e) { "Request failed to parse into BeersRequest data class." }
+                call.respond(HttpStatusCode.OK, beerService.getBeersById(request!!.toInt()))
+            } catch(e: NumberFormatException) {
+                logger.error(e) { "Given ID: $request failed to parse to integer" }
                 call.respond(
                     HttpStatusCode.BadRequest,
-                    e.message ?: "Request failed to parse into Int data class"
+                    e.message ?: "Request failed to parse into Int data class: $request."
                 )
-            } catch(e: BeerNotFoundException) {
-                logger.error(e) { "No beer found for id: $request." }
+            } catch(e: NoBeersFoundException) {
+                logger.error(e) { "No beer found for given ID: $request." }
                 call.respond(HttpStatusCode.NotFound, e.message)
             } catch(e: Exception) {
                 logger.error(e) { "Request failed due to unspecified error." }

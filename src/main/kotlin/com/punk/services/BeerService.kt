@@ -1,6 +1,5 @@
 package com.punk.services
 
-import com.punk.exceptions.BeerNotFoundException
 import com.punk.exceptions.NoBeersFoundException
 import com.punk.libraries.PunkClient
 import com.punk.models.BeersResponse
@@ -42,6 +41,7 @@ class BeerService(
             logger.error { "No beers returned in getBeersByName." }
             throw NoBeersFoundException(function = "getBeersByName $name")
         }
+
         return BeersResponse(beers)
     }
 
@@ -55,8 +55,9 @@ class BeerService(
 
         if (beer.isEmpty()) {
             logger.error { "No beer found with id: $id." }
-            throw BeerNotFoundException(beerId = id)
+            throw NoBeersFoundException(function = "getBeersById $id")
         }
+
         return BeersResponse(beer)
     }
 }
