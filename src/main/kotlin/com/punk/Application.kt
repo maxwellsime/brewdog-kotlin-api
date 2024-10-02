@@ -12,15 +12,17 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 
-fun main() {
-    embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
-        install(ContentNegotiation) { json() }
-        install(Koin) { modules(punkModule) }
+fun main(args: Array<String>) {
+    embeddedServer(Netty, commandLineEnvironment(args)).start(wait = true)
+}
 
-        val beerService by inject<BeerService>()
+fun Application.main() {
+    install(ContentNegotiation) { json() }
+    install(Koin) { modules(punkModule) }
 
-        configureRouting(beerService)
-    }.start(wait = true)
+    val beerService by inject<BeerService>()
+
+    configureRouting(beerService)
 }
 
 fun Application.configureRouting(beerService: BeerService) {
